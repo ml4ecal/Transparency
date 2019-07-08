@@ -24,3 +24,17 @@ Variables:
 Info:
 
     to dump luminosity information, see https://github.com/amassiro/DumpLumi
+    
+    Actually no need, in new trees, "lumi" already dumped into the ttree
+
+    
+    
+How to read:
+
+    r00t draw.cxx\(\"Transparency/BlueLaser_2017_rereco_v2_newformat.root\",62,50,1\)
+    r00t draw.cxx\(\"Transparency/BlueLaser_2017_rereco_v2_newformat.root\",21,120,0\)
+
+    
+Where:
+
+    /home/amassiro/Cern/Code/ECAL/Transparency
