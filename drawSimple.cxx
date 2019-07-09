@@ -4,14 +4,10 @@
 
 void drawSimple(std::string nameInputFile = "Laser2017_noTP.root") {
   
-  std::cout << " ix = " << ix << std::endl;
-  std::cout << " iy = " << iy << std::endl;
-  std::cout << " iz = " << iz << std::endl;
-  
   gStyle->SetOptStat(0);
   
   TFile* fileIn = new TFile(nameInputFile.c_str(), "READ");
-  TTree* ntu      = (TTree*) fileIn -> Get ("ntu");
+  TTree* ntu      = (TTree*) fileIn -> Get ("laser");
   
   std::cout << " entries = " << ntu->GetEntries() << std::endl;
   
