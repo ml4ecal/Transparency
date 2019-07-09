@@ -35,6 +35,17 @@ How to read:
     r00t draw.cxx\(\"Transparency/BlueLaser_2017_rereco_v2_newformat.root\",21,120,0\)
 
     
+Filter tree:
+
+    r00t filter.cxx\(\"Transparency/BlueLaser_2017_rereco_v2_newformat.root\",21,120,0\)
+    
+Filter and draw for public:
+
+    r00t filterForPublic.cxx\(\"Transparency/BlueLaser_2017_rereco_v2_newformat.root\",21,120,0\)
+    r00t drawSimple.cxx\(\"Transparency/BlueLaser_2017_rereco_v2_newformat.root.filter.21.120.0.public.root\"\)
+
+    
+    
 Where:
 
     /home/amassiro/Cern/Code/ECAL/Transparency
