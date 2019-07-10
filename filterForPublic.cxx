@@ -42,7 +42,7 @@ void filterForPublic(std::string nameInputFile = "Laser2017_noTP.root", int ix =
 //   ntu->GetV1() --> transparency
 //   ntu->GetV2() --> time
 //   ntu->GetV3() --> lumi
-//   ntu->GetV4() --> fill_time
+//   ntu->GetV4() --> (time[0]-fill_time)   ---> time since the beginning of the fill
 //   
   
   int netries = ntu->GetSelectedRows();
