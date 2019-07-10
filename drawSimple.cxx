@@ -2,6 +2,27 @@
 //---- plot Laser
 //
 
+
+
+// 
+//  std::string split implementation by using delimeter as a character.
+// 
+//  https://thispointer.com/how-to-split-a-string-in-c/ 
+// 
+std::vector<std::string> split(std::string strToSplit, char delimeter) {
+  std::stringstream ss(strToSplit);
+  std::string item;
+  std::vector<std::string> splittedStrings;
+  while (std::getline(ss, item, delimeter))
+  {
+    splittedStrings.push_back(item);
+  }
+  return splittedStrings;
+}
+
+
+
+
 void drawSimple(std::string nameInputFile = "Laser2017_noTP.root") {
   
   gStyle->SetOptStat(0);
@@ -48,6 +69,16 @@ void drawSimple(std::string nameInputFile = "Laser2017_noTP.root") {
   cclaser->SetGrid();
   
   
+  std::string nameInputFile_no_slash;
+  std::vector<std::string> v_nameInputFile_no_slash = split(nameInputFile, '/');
+  nameInputFile_no_slash = v_nameInputFile_no_slash.at(v_nameInputFile_no_slash.size()-1);
+  std::cout << " nameInputFile_no_slash = " << nameInputFile_no_slash << std::endl;
+  
+  std::string to_save;
+  to_save = "plots/cclaser_" + nameInputFile_no_slash + ".png";
+  cclaser->SaveAs(to_save.c_str());
+  to_save = "plots/cclaser_" + nameInputFile_no_slash + ".root";
+  cclaser->SaveAs(to_save.c_str());
   
 }
 

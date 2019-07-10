@@ -45,6 +45,18 @@ Filter and draw for public:
     r00t drawSimple.cxx\(\"Transparency/BlueLaser_2017_rereco_v2_newformat.root.filter.21.120.0.public.root\"\)
 
     
+Filter all:
+    
+      // iphi= [121-140]
+      // ieta= [6-25]
+      // EB+
+
+      python filterPN.py
+
+... and plot:
+
+      python plotPN.py
+
     
 Where:
 
