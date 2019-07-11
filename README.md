@@ -9,6 +9,7 @@ Ntuples location:
      /eos/cms/store/group/dpg_ecal/comm_ecal/pedestals_gainratio/BlueLaser_2017_rereco_v2_newformat.root
      /eos/cms/store/group/dpg_ecal/comm_ecal/pedestals_gainratio/BlueLaser_2018_v1_rereco.root
 
+     /eos/cms/store/group/dpg_ecal/comm_ecal/pedestals_gainratio/BlueLaser_2011-2018_newformat.root      <- best
 
 
 Questions:
@@ -44,6 +45,8 @@ Filter and draw for public:
     r00t filterForPublic.cxx\(\"Transparency/BlueLaser_2017_rereco_v2_newformat.root\",21,120,0\)
     r00t drawSimple.cxx\(\"Transparency/BlueLaser_2017_rereco_v2_newformat.root.filter.21.120.0.public.root\"\)
 
+    r00t filterForPublic.cxx\(\"Transparency/BlueLaser_2011-2018_newformat.root\",21,124,0\)
+    r00t drawSimple.cxx\(\"Transparency/BlueLaser_2011-2018_newformat.root.filter.21.124.0.public.root\"\)
     
 Filter all:
     
