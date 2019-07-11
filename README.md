@@ -50,15 +50,15 @@ Filter and draw for public:
     
 Filter all:
     
-      // iphi= [121-140]
-      // ieta= [6-25]
-      // EB+
+    // iphi= [121-140]
+    // ieta= [6-25]
+    // EB+
 
-      python filterPN.py
+    python filterPN.py
 
 ... and plot:
 
-      python plotPN.py
+    python plotPN.py
 
     
 Where:

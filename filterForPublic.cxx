@@ -27,7 +27,12 @@ void filterForPublic(std::string nameInputFile = "Laser2017_noTP.root", int ix =
   
   //---- B-on
   
-  TString toCut = Form ("ix==%d && iy==%d && iz==%d && bfield > 3.5 ", ix, iy, iz);
+//   TString toCut = Form ("ix==%d && iy==%d && iz==%d && bfield > 3.5 ", ix, iy, iz);
+  
+  TString toCut = Form ("ix==%d && iy==%d && iz==%d && bfield > 3.5 && time[0]>1495000000 && time[0]<1515000000", ix, iy, iz);
+  
+  //----> 2017: 1495 - 1515 x 10^6
+  
   
   std::cout << " toDraw = " << toDraw.Data() << std::endl;
   std::cout << " toCut  = " << toCut.Data()  << std::endl;
