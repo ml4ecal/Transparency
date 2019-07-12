@@ -54,6 +54,10 @@ Filter all:
     // ieta= [6-25]
     // EB+
 
+    // iphi= [131-140]
+    // ieta= [6-25]
+    // EB+
+
     python filterPN.py
 
 ... and plot:
