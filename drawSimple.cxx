@@ -97,9 +97,9 @@ void drawSimple(std::string nameInputFile = "Laser2017_noTP.root") {
   
   gr_lumi->SetMarkerSize  (0.2);               
   gr_lumi->SetMarkerStyle (20);              
-  gr_lumi->SetMarkerColor (kRed);            
+  gr_lumi->SetMarkerColor (kBlue);            
   gr_lumi->SetLineWidth (1);                 
-  gr_lumi->SetLineColor (kRed);              
+  gr_lumi->SetLineColor (kBlue);              
   
   //---- style (end) ----
   
@@ -114,6 +114,11 @@ void drawSimple(std::string nameInputFile = "Laser2017_noTP.root") {
   gr_lumi->GetXaxis()->SetTimeFormat("%Y-%m-%d %H:%M");
   gr_lumi->GetXaxis()->SetTimeOffset(0,"gmt");
   cclumi->SetGrid();
+  
+  to_save = "plots/cclumi_" + nameInputFile_no_slash + ".lumi.png";
+  cclumi->SaveAs(to_save.c_str());
+  to_save = "plots/cclumi_" + nameInputFile_no_slash + ".lumi.root";
+  cclumi->SaveAs(to_save.c_str());
   
   
   
