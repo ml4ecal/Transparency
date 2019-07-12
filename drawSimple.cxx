@@ -32,6 +32,7 @@ void drawSimple(std::string nameInputFile = "Laser2017_noTP.root") {
   
   std::cout << " entries = " << ntu->GetEntries() << std::endl;
   
+  TString lumi_string  = Form ("lumi");
   TString laser_string  = Form ("transparency");
   TString time_string  = Form ("time");
   TString toDraw = Form ("%s:%s", laser_string.Data(), time_string.Data());
@@ -79,6 +80,45 @@ void drawSimple(std::string nameInputFile = "Laser2017_noTP.root") {
   cclaser->SaveAs(to_save.c_str());
   to_save = "plots/cclaser_" + nameInputFile_no_slash + ".root";
   cclaser->SaveAs(to_save.c_str());
+ 
+  
+  
+  //---- and now the luminosity
+  toDraw = Form ("%s:%s", lumi_string.Data(), time_string.Data());  
+  std::cout << " toDraw = " << toDraw.Data() << std::endl;
+  
+  ntu->Draw(toDraw.Data(), toCut.Data(), "goff");
+  std::cout << " ntu->GetSelectedRows() = " << ntu->GetSelectedRows() << std::endl;
+  
+  TGraph *gr_lumi  = new TGraph(ntu->GetSelectedRows(), ntu->GetV2(), ntu->GetV1());  
+  
+  
+  //---- style ----
+  
+  gr_lumi->SetMarkerSize  (0.2);               
+  gr_lumi->SetMarkerStyle (20);              
+  gr_lumi->SetMarkerColor (kRed);            
+  gr_lumi->SetLineWidth (1);                 
+  gr_lumi->SetLineColor (kRed);              
+  
+  //---- style (end) ----
+  
+  
+  TCanvas* cclumi = new TCanvas ("cclumi", toCut.Data(), 1600, 600);
+  gr_lumi->SetTitle(toCut.Data());
+  gr_lumi->Draw("AP");
+  gr_lumi->GetYaxis()->SetTitle("luminosity");
+  gr_lumi->GetXaxis()->SetTitle("time");
+  gr_lumi->GetXaxis()->SetTimeDisplay(1);
+  gr_lumi->GetXaxis()->SetNdivisions(-503);
+  gr_lumi->GetXaxis()->SetTimeFormat("%Y-%m-%d %H:%M");
+  gr_lumi->GetXaxis()->SetTimeOffset(0,"gmt");
+  cclumi->SetGrid();
+  
+  
+  
+  
+  
   
 }
 
