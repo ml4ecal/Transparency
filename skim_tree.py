@@ -58,11 +58,16 @@ def add_output(out):
         outputs[k].append(v)
 
 last_fill_dump_time = 0
+
+
 current_fill_time = 0
 last_fill_lumi = 0
 current_fill_lumi = 0
 
+last_fill_duration = 0.
 
+current_fill_start_time = 0.
+last_fill_start_time = 0
 
 for iev, event in enumerate(tree):
     pbar.update()
@@ -96,6 +101,7 @@ for iev, event in enumerate(tree):
     else:
         # Switch the last current_fill_time as dump time
         last_fill_dump_time = current_fill_time
+        
 
         out["time_in_fill"] = 0.
         out["time_in_fill_stable"] = 0.
@@ -114,6 +120,7 @@ for iev, event in enumerate(tree):
     elif isinfill and not latest["in_fill"]:
         # Start the new fill
         out["intlumi"] = out["lumi"]
+        current_fill_start_time = out["time"]
     else:
         out["intlumi"] = latest["intlumi"] + out["lumi"]
     
@@ -134,7 +141,7 @@ for iev, event in enumerate(tree):
     add_output(out)
     latest = out
 
-    #print(out)
+    print(out)
 
 
 
