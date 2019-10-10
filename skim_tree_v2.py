@@ -62,10 +62,6 @@ for iev, event in enumerate(tree):
     out["fill_time_stable_start"] = event.fill_time_stablebeam
     out["in_fill"] = int(isinfill)
 
-    if iev == 0:
-        continue  
-
-
     if isinfill:
         out["time_in_fill"] = event.time[0] - event.fill_time
         time_infill_stable = event.time[0] - event.fill_time_stablebeam
@@ -105,14 +101,14 @@ for iev, event in enumerate(tree):
     out["transp_entry"] = iev
 
     add_output(out)
-    print(out)
+    #print(out)
 
 df = pd.DataFrame(outputs)
-df.to_csv("transp_metadata_2017.csv", sep=",", index=False)
+df.to_csv("transp_metadata_2017_v2.csv", sep=",", index=False)
 
 tdata_EB = np.array(transp_data_EB_tot)
 tdata_EE = np.array(transp_data_EE_tot)
 
-np.save("transp_data_EB.npy", tdata_EB)
-np.save("transp_data_EE.npy", tdata_EE)
+np.save("transp_data_EB_v2.npy", tdata_EB)
+np.save("transp_data_EE_v2.npy", tdata_EE)
 
