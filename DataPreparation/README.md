@@ -12,6 +12,16 @@ It outpus three files:
 
 There are two arrays because they have different geometries and they are saved as arrays with the same geometry of the detector. 
 
+Inputs from: 
+
+    /eos/cms/store/group/dpg_ecal/comm_ecal/pedestals_gainratio/BlueLaser_2011-2018_newformat.root 
+    (copy here) http://dvalsecc.web.cern.ch/dvalsecc/ECAL/Transparency/data_v1/
+    
+Output:
+
+    http://dvalsecc.web.cern.ch/dvalsecc/ECAL/Transparency/
+    
+
 ## Luminosity and fill metadata
 These information is taken from brilcalc. 
 ```
