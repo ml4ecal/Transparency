@@ -12,6 +12,14 @@ It outpus three files:
 
 There are two arrays because they have different geometries and they are saved as arrays with the same geometry of the detector. 
 
+Inputs from: 
+    /eos/cms/store/group/dpg_ecal/comm_ecal/pedestals_gainratio/BlueLaser_2011-2018_newformat.root 
+    (copy here) http://dvalsecc.web.cern.ch/dvalsecc/ECAL/Transparency/data_v1/
+    
+Output:
+
+    http://dvalsecc.web.cern.ch/dvalsecc/ECAL/Transparency/
+
 ### ECAL geometry
 The barrel is represented as 2d array (a rectangle) of sides: 170 eta, 360 phi.
 The ieta index goes from 1 to 85 and from -85 to -1 and it is translated to 0-169 indexes with this transformation: 
@@ -20,8 +28,10 @@ The ieta index goes from 1 to 85 and from -85 to -1 and it is translated to 0-16
 
 The endcaps is represented as 3d array:   2 sides, 100 ix , 100 iy
 
+
 ## Luminosity and fill metadata
 These information is taken from brilcalc. 
+
 ```
 brilcalc lumi -o lumi_file.csv --begin "05/01/17 12:14:02" --end 6500 --tssec -u /ub --byls
 ```

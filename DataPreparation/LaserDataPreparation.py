@@ -15,16 +15,17 @@ pbar = tqdm(total=tree.GetEntries())
 
 
 outputs = {
-    "transp_entry" : [],
-    "time": [],
-    "bfield": [],
-    "fill_num": [],
-    "fill_time_start": [],
-    "fill_time_stable_start": [],
-    "time_in_fill": [],
-    "time_in_fill_stable": [],
-    "run_in_fill" : [],
-    "in_fill" : []
+    "transp_entry" : [],                        #   counter
+    "time": [],                                 #   absolute time of the first laser region in the scan. 
+                                                #           FIXME: it could be improved making it xtal dependent, but 20 min window is ok so far. Special case for interrupted sequences will need some attention
+    "bfield": [],                               #   magnetic field
+    "fill_num": [],                             #   LHC fill number
+    "fill_time_start": [],                      #   Time of the beginning of the fill
+    "fill_time_stable_start": [],               #   Time of the declaration of stable beam for the current fill
+    "time_in_fill": [],                         #   Time since the beginning of the fill
+    "time_in_fill_stable": [],                  #   Time since the moment stable beam is declared
+    "run_in_fill" : [],                         #   Run number in fill
+    "in_fill" : []                              #   Flag: 1 = during a fill, 0 = not during a fill
 }
 
 
