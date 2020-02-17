@@ -28,8 +28,6 @@ outputs = {
 }
 
 
-
-
 transp_data_EB_tot = []
 transp_data_EE_tot = []
 

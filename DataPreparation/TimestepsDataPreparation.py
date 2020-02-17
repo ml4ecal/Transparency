@@ -14,68 +14,41 @@ from collections import namedtuple
 mpl.rcParams['figure.figsize'] = (10,8)
 mpl.rcParams["image.origin"] = 'lower'
 
-fillinfo = namedtuple("fillinfo", ["fill", "beamstatus", "lumi_inst", "lumi_in_fill", "time_in_fill", "time_in_fill_stable"])
+
+data_folder = "/eos/user/d/dvalsecc/www/ECAL/Transparency/data_v1"
 
 
-# In[2]:
+
+data_EE = np.load(f"{data_folder}/transp_data_EE.npy", mmap_mode="r")
+data_EB = np.load(f"{data_folder}/transp_data_EB.npy", mmap_mode="r")
 
 
-data_EE = np.load("transp_data_EE.npy",mmap_mode="r")
-data_EB = np.load("transp_data_EB.npy", mmap_mode="r")
-
-
-# In[3]:
-
-
-meta = pd.read_csv("transp_metadata_2017.csv",sep=",").astype({"transp_entry":"int64", "time": "int64", "fill_num":"int64", "time_in_fill":"int64", "time_in_fill_stable":"int64"})
+# ## Read brilcalc metadata
 bril = pd.read_csv("lumi_brilcalc_2017.csv", sep=",", comment="#")
 bril["run"] = bril.apply(lambda row: int(row["run:fill"].split(":")[0]), axis=1)
 bril["fill"] = bril.apply(lambda row: int(row["run:fill"].split(":")[1]), axis=1)
 
 
-# In[3]:
-
-
-print(meta.columns)
-print(bril.columns)
-
-
-# ## Starting lumisection
-
-# In[180]:
-
-
-def gettimes(timestamp, n, t=23):
-    o = []
-    for i in range(abs(n)):
-            o.append(timestamp + i*t)
-    if n >0:
-        return o
-    else:
-        o.reverse()
-        return o
-
-
-# Look for the biggest deltaT between measurements
-
-# In[382]:
-
-
-# meta["time-1"] = meta["time"].shift(1)
-# meta["deltaT"] = (meta["time"]- meta["time-1"])
 
 
 # Cumulative luminosity over fill
 
-# In[7]:
+# In[11]:
 
 
-# plt.plot(bril.groupby("fill")["delivered(/ub)"].cumsum())
+plt.plot(bril.groupby("fill")["delivered(/ub)"].cumsum())
 
 
 # ## Cumulative lumi in fill estimation
+# Let's calculate cumulative lumi in the fill, and cumulative time in the fill thanks to pandas groupby and transform
 
-# In[125]:
+# In[12]:
+
+
+bril.head()
+
+
+# In[13]:
 
 
 bril["lumi_in_fill"] = bril.groupby("fill")["delivered(/ub)"].cumsum()
@@ -84,9 +57,23 @@ bril["time_in_fill_stable"] = bril[bril.beamstatus=="STABLE BEAMS"].groupby("fil
 bril["time_in_fill_stable"] = bril["time_in_fill_stable"].fillna(0)
 
 
-# ## Fill start time saving
+# In[14]:
 
-# In[111]:
+
+bril.head()
+
+
+# ## Utility functions to query bril information later
+# 
+
+# In[15]:
+
+
+# Useful Namestupls with fill information
+fillinfo = namedtuple("fillinfo", ["fill", "beamstatus", "lumi_inst", "lumi_in_fill", "time_in_fill", "time_in_fill_stable"])
+
+
+# In[18]:
 
 
 def is_in_fill(timestamp):
@@ -100,7 +87,7 @@ def is_in_fill(timestamp):
 #is_in_fill(starting_time)
 
 
-# In[112]:
+# In[19]:
 
 
 def get_lumi_interval(timestart, timestop):
@@ -109,7 +96,7 @@ def get_lumi_interval(timestart, timestop):
 #get_lumi_interval(starting_time, 1512022951 )
 
 
-# In[113]:
+# In[20]:
 
 
 def get_last_fill_end(timestamp, fill=0):
@@ -120,7 +107,7 @@ def get_last_fill_end(timestamp, fill=0):
         return pd.DataFrame()
 
 
-# In[114]:
+# In[21]:
 
 
 def get_fill_timeinterval(fill):
@@ -128,7 +115,16 @@ def get_fill_timeinterval(fill):
     return t.iloc[0], t.iloc[-1]
 
 
-# In[191]:
+# In[23]:
+
+
+get_fill_timeinterval(6417)
+
+
+# ## Lumi/fill metadata output
+# Let's read bril data to create metadata points every N minutes
+
+# In[24]:
 
 
 outputs = {
@@ -152,13 +148,20 @@ def add_output(out):
         outputs[k].append(v)
 
 
-# In[192]:
+# In[26]:
+
+
+# Interpolation time
+time_interval = 600
+
+
+# In[25]:
 
 
 previous_time = bril.time.iloc[0]
-tot = (bril.time.iloc[-1]-bril.time.iloc[0])//600
+tot = (bril.time.iloc[-1]-bril.time.iloc[0])//time_interval
 
-for iev, curr_time in enumerate(range(bril.time.iloc[0], bril.time.iloc[-1], 600)):
+for iev, curr_time in enumerate(range(bril.time.iloc[0], bril.time.iloc[-1], time_interval)):
     if iev % 100 == 0:
         print(f"{iev}/{tot}")
     
@@ -202,104 +205,4 @@ for iev, curr_time in enumerate(range(bril.time.iloc[0], bril.time.iloc[-1], 600
     
     previous_time = curr_time
     add_output(out)
-
-
-# In[193]:
-
-
-output_df = pd.DataFrame(outputs)
-output_df.to_csv("output_metadata_2017_10min.csv")
-
-# In[4]:
-
-
-timesteps_df = output_df
-
-
-# In[5]:
-
-
-def get_transp_EB(index):
-    EB = data_EB[int(index)-1][85, :]
-    return EB
-
-def get_transp_EE(index):
-    EE = data_EE[int(index)-1]
-    return EE
-
-
-# In[6]:
-
-
-def get_transp_interval(timestamp):
-    last_meas = meta[(meta.time < timestamp)].iloc[-1]
-    next_meas = meta[(meta.time > timestamp)]
-    if next_meas.empty:
-        return last_meas, pd.DataFrame()
-    #print("{} {} | {}| x0: {} | Interval diff {:.3f}".format(last_meas.time, next_meas.time,  timestamp,timestamp- last_meas.time, ( next_meas.time - last_meas.time) / 60))
-    return last_meas, next_meas.iloc[0]
-
-
-# In[7]:
-
-
-def interpolate_transp(x, x0, x1, y0, y1):
-    z = (x - x0)*( (y1-y0)/(x1-x0)) + y0
-    #print(f"x {x}, x0 {x0}, x1 {x1}, y0 {y0}, y1 {y1} ---> {z}")
-    return z
-
-
-# In[8]:
-
-
-def get_transp_interpolate(timestamp):
-    Z0, Z1 = get_transp_interval(timestamp)
-    if Z1.empty:
-        return np.array([])
-    transp_EB_y0 = get_transp_EB(Z0.transp_entry)
-    transp_EB_y1 = get_transp_EB(Z1.transp_entry)
-    trans_EB = interpolate_transp(timestamp, Z0.time, Z1.time,  transp_EB_y0, transp_EB_y1)
-    #trans_EE =  interpolate_transp(timestamp, meas_interval[0].time, meas_interval[1].time,  transp_EE_y0, transp_EE_y1)
-    return trans_EB
-
-
-# In[9]:
-
-
-transp_EB_output = []
-transp_EE_output = []
-
-
-# In[10]:
-
-
-tot = len(timesteps_df)
-
-for iev, row in timesteps_df.iterrows():
-    if iev % 100 == 0:
-        print(f"{iev}/{tot}")
-    
-    tEB = get_transp_interpolate(row.time)
-    if tEB.size == 0:
-        break
-    transp_EB_output.append(tEB)
-    #transp_EE_output.append(tEE)
-
-
-# In[11]:
-
-
-arr = np.array(transp_EB_output)
-
-
-# In[12]:
-
-
-np.save("output_transp_EB_ix1_10min.npy", arr)
-
-
-# In[ ]:
-
-
-
 
