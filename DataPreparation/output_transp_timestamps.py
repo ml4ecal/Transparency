@@ -59,7 +59,7 @@ def interpolate_transp(x, x0, x1, y0, y1):
 def get_transp_interpolate(timestamp):
     Z0, Z1 = get_transp_interval(timestamp)
     if Z1.empty:
-        return np.array([])
+        return -1.
 
     if args.iz == 0:
         transp_EB_y0 = get_transp_EB(Z0.transp_entry)
@@ -90,8 +90,6 @@ for iev, row in timestamps_df.iterrows():
     
     tran = get_transp_interpolate(row.time)
     
-    if tran.shape == 0:
-        break
     transp_output.append(tran)
 
 
