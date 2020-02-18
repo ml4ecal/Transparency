@@ -38,6 +38,19 @@ brilcalc lumi -o lumi_file.csv --begin "05/01/17 12:14:02" --end 6500 --tssec -u
 
 The script **TimestepsDataPreparation.py** is used to read brilcalc data, and output several metadata with a 10 minutes time interval. 
 
+```
+python TimestepsDataPreparation.py [-h] [--bril BRIL] [-t TIME_INTERVAL]
+                                   [-o OUTPUTFILE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --bril BRIL           Bril file
+  -t TIME_INTERVAL, --time-interval TIME_INTERVAL
+                        Time interval in seconds
+  -o OUTPUTFILE, --outputfile OUTPUTFILE
+                        Output file
+```
+
 The output of the script is:
 - output_metadata_year_interval.csv:  metadata for interpolated points (lumi, time_in_fill, etc)
 

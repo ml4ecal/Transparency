@@ -1,102 +1,53 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
-
-import matplotlib.pyplot as plt
-import matplotlib as mpl
 import pandas as pd
 import numpy as np
 from pprint import pprint
 from collections import namedtuple
 
-mpl.rcParams['figure.figsize'] = (10,8)
-mpl.rcParams["image.origin"] = 'lower'
+import argparse
 
-
-data_folder = "/eos/user/d/dvalsecc/www/ECAL/Transparency/data_v1"
-
-
-
-data_EE = np.load(f"{data_folder}/transp_data_EE.npy", mmap_mode="r")
-data_EB = np.load(f"{data_folder}/transp_data_EB.npy", mmap_mode="r")
-
+parser = argparse.ArgumentParser()
+parser.add_argument("--bril", help="Bril file", type=str)
+parser.add_argument("-t","--time-interval", help="Time interval in seconds", type=int)
+parser.add_argument("-o","--outputfile", help="Output file", type=str)
+args = parser.parse_args()
 
 # ## Read brilcalc metadata
-bril = pd.read_csv("lumi_brilcalc_2017.csv", sep=",", comment="#")
+bril = pd.read_csv(args.bril, sep=",", comment="#")
 bril["run"] = bril.apply(lambda row: int(row["run:fill"].split(":")[0]), axis=1)
 bril["fill"] = bril.apply(lambda row: int(row["run:fill"].split(":")[1]), axis=1)
 
 
-
-
-# Cumulative luminosity over fill
-
-# In[11]:
-
-
-plt.plot(bril.groupby("fill")["delivered(/ub)"].cumsum())
-
-
-# ## Cumulative lumi in fill estimation
-# Let's calculate cumulative lumi in the fill, and cumulative time in the fill thanks to pandas groupby and transform
-
-# In[12]:
-
-
 bril.head()
 
-
-# In[13]:
-
-
 bril["lumi_in_fill"] = bril.groupby("fill")["delivered(/ub)"].cumsum()
+bril["lumi_int"] = bril["delivered(/ub)"].cumsum()
 bril["time_in_fill"] = bril.groupby("fill")["time"].transform(lambda t: t - t.min())
 bril["time_in_fill_stable"] = bril[bril.beamstatus=="STABLE BEAMS"].groupby("fill")["time"].transform(lambda t: t - t.min())
 bril["time_in_fill_stable"] = bril["time_in_fill_stable"].fillna(0)
 
-
-# In[14]:
-
-
 bril.head()
 
 
-# ## Utility functions to query bril information later
-# 
-
-# In[15]:
-
-
 # Useful Namestupls with fill information
-fillinfo = namedtuple("fillinfo", ["fill", "beamstatus", "lumi_inst", "lumi_in_fill", "time_in_fill", "time_in_fill_stable"])
-
-
-# In[18]:
+fillinfo = namedtuple("fillinfo", ["fill", "beamstatus", "lumi_inst", "lumi_int", "lumi_in_fill", "time_in_fill", "time_in_fill_stable"])
 
 
 def is_in_fill(timestamp):
     a = bril[abs(bril.time - timestamp)<23]
     if len(a):
         a = a.iloc[0]
-        return fillinfo(a.fill, a.beamstatus, a["delivered(/ub)"], a.lumi_in_fill, a.time_in_fill, a.time_in_fill_stable)
+        return fillinfo(a.fill, a.beamstatus, a["delivered(/ub)"], a.lumi_int, a.lumi_in_fill, a.time_in_fill, a.time_in_fill_stable)
     else:
-        return fillinfo(0, "NOBEAM", 0, 0,0,0)
+        return fillinfo(0, "NOBEAM", 0, 0, 0,0,0)
     
 #is_in_fill(starting_time)
 
 
-# In[19]:
-
-
 def get_lumi_interval(timestart, timestop):
     return bril[ (bril.time >= timestart) & (bril.time <= timestop)]["delivered(/ub)"].sum()
-
-#get_lumi_interval(starting_time, 1512022951 )
-
-
-# In[20]:
 
 
 def get_last_fill_end(timestamp, fill=0):
@@ -107,30 +58,22 @@ def get_last_fill_end(timestamp, fill=0):
         return pd.DataFrame()
 
 
-# In[21]:
-
-
 def get_fill_timeinterval(fill):
     t = bril[bril.fill== fill].time
     return t.iloc[0], t.iloc[-1]
 
 
-# In[23]:
-
-
-get_fill_timeinterval(6417)
+#get_fill_timeinterval(6417)
 
 
 # ## Lumi/fill metadata output
 # Let's read bril data to create metadata points every N minutes
 
-# In[24]:
-
-
 outputs = {
     "in_fill" : [],
     "time": [],
     "lumi_inst": [],
+    "lumi_int" : [],
     "lumi_in_fill": [],
     "lumi_since_last_point": [],
     "lumi_last_fill": [],
@@ -148,17 +91,12 @@ def add_output(out):
         outputs[k].append(v)
 
 
-# In[26]:
-
-
 # Interpolation time
-time_interval = 600
-
-
-# In[25]:
+time_interval = args.time_interval
 
 
 previous_time = bril.time.iloc[0]
+last_int_lumi = 0.
 tot = (bril.time.iloc[-1]-bril.time.iloc[0])//time_interval
 
 for iev, curr_time in enumerate(range(bril.time.iloc[0], bril.time.iloc[-1], time_interval)):
@@ -166,6 +104,8 @@ for iev, curr_time in enumerate(range(bril.time.iloc[0], bril.time.iloc[-1], tim
         print(f"{iev}/{tot}")
     
     fill_info = is_in_fill(curr_time)
+    if fill_info.fill != 0.:
+        last_int_lumi = fill_info.lumi_int
     
     last_fill_info = get_last_fill_end(curr_time, fill_info.fill)
     
@@ -192,6 +132,7 @@ for iev, curr_time in enumerate(range(bril.time.iloc[0], bril.time.iloc[-1], tim
         "time": curr_time,
         "fill_num": fill_info.fill,
         "lumi_inst": fill_info.lumi_inst,
+        "lumi_int": last_int_lumi,
         "lumi_in_fill": fill_info.lumi_in_fill,
         "lumi_since_last_point": lumi_since_last_point,
         "lumi_last_fill": lumi_last_fill,
@@ -206,3 +147,8 @@ for iev, curr_time in enumerate(range(bril.time.iloc[0], bril.time.iloc[-1], tim
     previous_time = curr_time
     add_output(out)
 
+
+output_df = pd.DataFrame(outputs)
+output_df.to_csv(args.outputfile, index=False, sep=",")
+
+print("Done")
