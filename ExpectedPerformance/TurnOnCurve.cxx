@@ -1,7 +1,7 @@
 #include"tdrstyle.C"
 #include<cmath>
 
-void TurnOnCurveDerivativeEE() {
+void TurnOnCurve() {
 
     gStyle->SetOptStat(0);
   
@@ -9,17 +9,21 @@ void TurnOnCurveDerivativeEE() {
 
     std::ifstream in_file;
     std::vector<float> transparency;
-    float x;
+    std::vector<float> lumi_inst;
+    std::vector<float> lumi_int;
+    float x,y,z;
 
-    // Load real transparency data
-    in_file.open("iring26.txt");
+    // Load real transparency data, with lumi inst and lumi in fill
+    in_file.open("iring24.txt");
     if (!in_file) {
         std::cout << "error" << std::endl;
         exit(1);
     }
 
-    while (in_file >> x) {
+    while (in_file >> x >> y >> z) {
         transparency.push_back(x);
+        lumi_inst.push_back(y);
+        lumi_int.push_back(z);
     }
 
     int transparency_size = transparency.size();
@@ -30,15 +34,15 @@ void TurnOnCurveDerivativeEE() {
     float threshold = 30;
     float delta_value = (massimo-minimo)/nbin;
 
-    int nEvents = 1000;
-
     TCanvas* cc_turn_on = new TCanvas ("cc_turn_on", "", 800, 600);
     TH1F *h_correction = new TH1F("h_correction", "", nbin, minimo, massimo);
     TH1F *h_real = new TH1F ("h_real", "", nbin, minimo, massimo);
 
+    // The function has been divided into two parts just for simplicity
     TF1* lumi_int_function = new TF1 ("lumi_int_function", "[0]*exp(-[1]*x)+(1-[0])*exp([2]*x)");
     TF1* lumi_inst_function = new TF1 ("lumi_inst_function", "[0]*exp(-[1]*(x-[3]))+(1-[0])*exp([2]*(x-[3]))");
 
+    // Fit parameters obtained from fit @ iring25    
     lumi_int_function->SetParameter(0, 9.93e-1);
     lumi_int_function->SetParameter(1, 3.87e-2);
     lumi_int_function->SetParameter(2, 3.22);
@@ -52,44 +56,36 @@ void TurnOnCurveDerivativeEE() {
     float lumi_min = 0.000100052299505594;
     float lumi_max = 0.000390878557887418;
     float delta_lumi = lumi_max - lumi_min;
-    float lumi_int, lumi_inst_0, time;
+    float lumi_inst_0;
 
-    float weight_correction = 0.;
-    float weight_real = 0.;
+    float weight= 0.;
 
-    float weight = 0.;
 
     // Fill histograms to get turn on curves
     for (int ibin = 0; ibin < nbin; ibin++) {
         float value = minimo + (ibin+0.5)*delta_value;
         std::cout << ibin << "/" << nbin << std::endl;
-        for (int iEvent = 0; iEvent < nEvents; iEvent++) {
-            for (int i = 0; i < transparency_size ; i++) {
-                if (transparency[i] == 1.) { 
-                    lumi_int = 0.;
-                    lumi_inst_0 = lumi_min + gRandom->Uniform(delta_lumi);             
-                    lumi_int += lumi_inst_0*23;
-                    lumi_inst_function->SetParameter(3, lumi_inst_0);
-                }
-                float lumi_inst = lumi_min + gRandom->Uniform(delta_lumi) ;
-                lumi_int += lumi_inst*23;  //lumi section = 23 seconds
-                float correction = (lumi_int_function->Eval(lumi_int))*(lumi_inst_function->Eval(lumi_inst));
-                float value_smeared = value*transparency[i]/correction;
-                float value_smeared_real = value*transparency[i];
-                weight += pow(lumi_inst_0/lumi_inst, 1/2);
-                if (value_smeared > threshold) {
-                    h_correction->Fill(value, pow(lumi_inst_0/lumi_inst, 1/2));
-                    weight_correction += pow(lumi_inst_0/lumi_inst, 1/2);
-                }
-               if (value_smeared_real > threshold) {
-                    h_real->Fill(value, pow(lumi_inst_0/lumi_inst, 1/2));
-                    weight_real += pow(lumi_inst_0/lumi_inst, 1/2);
-                }
+        for (int i = 0; i < transparency_size ; i++) {
+            if (transparency[i] == 1.) {
+                lumi_inst_0 = lumi_inst[i];
+                lumi_inst_function->SetParameter(3, lumi_inst_0);
+            }
+            y = lumi_inst[i] ;
+            z = lumi_int[i];  
+            float correction = (lumi_int_function->Eval(z))*(lumi_inst_function->Eval(y)); // compute correction 
+            float value_smeared = value*transparency[i]/correction; // value w/ correction
+            float value_smeared_real = value*transparency[i]; // value w/out correction
+            weight += pow(lumi_inst_0/y, 1/2);
+            if (value_smeared > threshold) {
+                h_correction->Fill(value, pow(lumi_inst_0/y, 1/2));
+            }
+           if (value_smeared_real > threshold) {
+                h_real->Fill(value, pow(lumi_inst_0/y, 1/2));
             }
         }
     }
 
-    h_real->Scale(1./(h_real->GetBinContent(nbin)));
+    h_real->Scale(1./(weight));
 
     h_real->SetLineWidth(2.);
     h_real->SetLineColor(kBlue);
@@ -99,7 +95,7 @@ void TurnOnCurveDerivativeEE() {
     h_real->GetXaxis()->SetTitle("Energy [GeV]");
     h_real->GetYaxis()->SetTitle("Efficiency");
 
-    h_correction->Scale(1./(h_correction->GetBinContent(nbin)));
+    h_correction->Scale(1./(weight));
 
     h_correction->SetLineWidth(2.);
     h_correction->SetLineColor(kRed);
@@ -142,7 +138,7 @@ void TurnOnCurveDerivativeEE() {
     for (int i = 2; i < nbin; i++) {
         sum_real = 0.;
         sum_correction = 0.;
-        sum_real = d_real[i-1]+d_real[i]+d_real[i+1];
+        sum_real = d_real[i-1]+d_real[i]+d_real[i+1]; //3 points average to smooth a little
         sum_correction = d_correction[i-1]+d_correction[i]+d_correction[i+1];
         point_real[i] = sum_real/3;
         point_correction[i] = sum_correction/3;
