@@ -77,6 +77,7 @@ metadata_fill = metadata_fill[(metadata_fill.lumi_inst >= 0.0001*1e9) & (metadat
 #Get transparency data
 fill_num = metadata_fill.fill_num.unique()
 transp_fill_26 = []
+transp_fill_25 = []
 transp_fill_24 = []
 
 for k in fill_num:
@@ -84,6 +85,9 @@ for k in fill_num:
     transp = [mean_test[i] for i in df.index.values]
     transp = transp/transp[0]
     transp_fill_26 = np.append(transp_fill_26, transp)
+    transp = [mean[i] for i in df.index.values]
+    transp = transp/transp[0]
+    transp_fill_25 = np.append(transp_fill_25, transp)
     transp = [mean_test_2[i] for i in df.index.values]
     transp = transp/transp[0]
     transp_fill_24 = np.append(transp_fill_24, transp)
@@ -94,10 +98,13 @@ for k in fill_num:
 
 # Save .txt files
 output = np.vstack([transp_fill_24, metadata_fill.lumi_inst*(1e-9), metadata_fill.lumi_in_fill*(1e-9), metadata_fill.time]).T
-np.savetxt("/home/alessandro/Scrivania/University/ML4ECAL/transparency_ecal/ExpectedPerformance/iring24.txt", output, fmt="%s %s %s %s")
+np.savetxt("/home/alessandro/Scrivania/University/ML4ECAL/Transparency/ExpectedPerformance/iring24.txt", output, fmt="%s %s %s %s")
+
+output = np.vstack([transp_fill_25, metadata_fill.lumi_inst*(1e-9), metadata_fill.lumi_in_fill*(1e-9), metadata_fill.time]).T
+np.savetxt("/home/alessandro/Scrivania/University/ML4ECAL/Transparency/ExpectedPerformance/iring25.txt", output, fmt="%s %s %s %s")
 
 output = np.vstack([transp_fill_26, metadata_fill.lumi_inst*(1e-9), metadata_fill.lumi_in_fill*(1e-9), metadata_fill.time]).T
-np.savetxt("/home/alessandro/Scrivania/University/ML4ECAL/transparency_ecal/ExpectedPerformance/iring26.txt", output, fmt="%s %s %s %s")
+np.savetxt("/home/alessandro/Scrivania/University/ML4ECAL/Transparency/ExpectedPerformance/iring26.txt", output, fmt="%s %s %s %s")
 
 
 # In[ ]:
