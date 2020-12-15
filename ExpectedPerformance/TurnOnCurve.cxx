@@ -19,7 +19,8 @@ void TurnOnCurve() {
     float x,y,z, t;
 
     // Load real transparency data, with lumi inst and lumi in fill
-    in_file.open("iring24.txt");
+//     in_file.open("iring24.txt");
+    in_file.open("iring26.txt");
     if (!in_file) {
         std::cout << "error" << std::endl;
         exit(1);
@@ -60,24 +61,26 @@ void TurnOnCurve() {
 
     gRandom->SetSeed();
 
-    float lumi_min = 0.000100052299505594;
-    float lumi_max = 0.000390878557887418;
-    float delta_lumi = lumi_max - lumi_min;
+//     float lumi_min = 0.000100052299505594;
+//     float lumi_max = 0.000390878557887418;
+//     float delta_lumi = lumi_max - lumi_min;
     float lumi_inst_0;
-
-
+    float lumi_int_0;
+   
+    
     // Fill histograms to get turn on curves
     for (int ibin = 0; ibin < nbin+1; ibin++) {
 	float sum_weight = 0.;
         float value = minimo + (ibin+0.5)*delta_value;
-        std::cout << ibin << "/" << nbin << std::endl;
+//         std::cout << ibin << "/" << nbin << std::endl;
         for (int i = 0; i < transparency_size ; i++) {
             if (transparency[i] == 1.) {
                 lumi_inst_0 = lumi_inst[i];
                 lumi_inst_function->SetParameter(3, lumi_inst_0);
+                lumi_int_0 = lumi_int[i];
             }
             y = lumi_inst[i] ;
-            z = lumi_int[i];  
+            z = lumi_int[i] - lumi_int_0; // AM : FIX  
             float correction = (lumi_int_function->Eval(z))*(lumi_inst_function->Eval(y)); // compute correction 
             float value_smeared = value*transparency[i]/correction; // value w/ correction
             float value_smeared_real = value*transparency[i]; // value w/out correction
@@ -132,8 +135,9 @@ void TurnOnCurve() {
     legend->AddEntry(h_ideal, "Ideal");
     legend->Draw();
 
-    
+    //
     // Derivatives of the turn on curves
+    //
     Double_t x_real[nbin], y_real[nbin], x_correction[nbin], y_correction[nbin], d_real[nbin], d_correction[nbin];
 
     for (int i = 1; i < nbin+1; i++) {
@@ -221,4 +225,48 @@ void TurnOnCurve() {
     std::cout << "Without correction: " << var_real << std::endl;
     std::cout << "With correction: " << var_correction << std::endl;
 
+    
+    //
+    // Draw transparency and its prediction
+    //
+    
+    TCanvas* cc_transp = new TCanvas ("cc_transp", "", 800, 600);
+    
+    Double_t x_time[transparency_size], y_transp[transparency_size], y_transp_predict[transparency_size];
+    
+    for (int i = 0; i < transparency_size ; i++) {
+      if (transparency[i] == 1.) {
+        lumi_inst_0 = lumi_inst[i];
+        lumi_inst_function->SetParameter(3, lumi_inst_0);
+        lumi_int_0 = lumi_int[i];
+//         std::cout << "  lumi_inst[" << i << "]  = " <<  lumi_inst[i]  <<  " lumi_int[" << i << "] = " << lumi_int[i] << std::endl;
+      }
+      y = lumi_inst[i] ;
+      z = lumi_int[i] - lumi_int_0; // AM : FIX  
+      float correction = (lumi_int_function->Eval(z))*(lumi_inst_function->Eval(y)); // compute correction 
+      
+      y_transp_predict[i] = correction;
+      y_transp[i] = transparency[i];
+      x_time[i] = time[i];
+    }
+    
+    TGraph* gr_tr = new TGraph(transparency_size,x_time,y_transp);
+    gr_tr->SetMarkerSize(1.);
+    gr_tr->SetMarkerStyle(20);
+    gr_tr->SetMarkerColor(kRed);
+    gr_tr->SetLineColor(kRed);
+    gr_tr->Draw("APL");
+    gr_tr->GetXaxis()->SetTimeDisplay(0);
+    
+    TGraph* gr_tr_predict = new TGraph(transparency_size,x_time,y_transp_predict);
+    gr_tr_predict->SetMarkerSize(1.);
+    gr_tr_predict->SetMarkerStyle(21);
+    gr_tr_predict->SetMarkerColor(kBlue);
+    gr_tr_predict->SetLineColor(kBlue);
+    gr_tr_predict->Draw("PL");
+    gr_tr_predict->GetXaxis()->SetTimeDisplay(0);
+    
+    cc_transp->SetGrid();
+    
+    
 }
