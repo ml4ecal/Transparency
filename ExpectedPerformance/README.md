@@ -7,3 +7,7 @@ w.r.t. keeping the corrections set to a constant value
 
     r99t drawTurnOnCurve.cxx
     
+Show the expected performance using the corrections made with `lumi_inst` 
+and `lumi_in_fill` data; show derivative distribution and compute its variance.
+
+    r99t TurnOnCurve.cxx

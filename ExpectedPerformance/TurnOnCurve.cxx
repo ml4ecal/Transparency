@@ -15,7 +15,8 @@ void TurnOnCurve() {
     std::vector<float> transparency;
     std::vector<float> lumi_inst;
     std::vector<float> lumi_int;
-    float x,y,z;
+    std::vector<float> time; //timestamp vector
+    float x,y,z, t;
 
     // Load real transparency data, with lumi inst and lumi in fill
     in_file.open("iring24.txt");
@@ -24,10 +25,11 @@ void TurnOnCurve() {
         exit(1);
     }
 
-    while (in_file >> x >> y >> z) {
+    while (in_file >> x >> y >> z >> t) {
         transparency.push_back(x);
         lumi_inst.push_back(y);
         lumi_int.push_back(z);
+        time.push_back(t);
     }
 
     int transparency_size = transparency.size();
