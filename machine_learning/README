@@ -1,0 +1,38 @@
+In this folder:
+All this script and other scripts at 
+
+https://github.com/federicodematteis/ECAL-work
+
+A list of the scripts in this folder:
+
+-regression_num.py/ipynb: actual code for DNN regressions for crystals data from iRings 22...28
+-TurnOnCurve version for single fills (the code for the turn on is also inside some regression.py scripts)
+
+Other scripts :
+-EE2DFitting, Fitsinglefill_2D, Tiring/Tiring-save : scripts for fitting single fills in a crystal, starting from the work of Alessandro Brumasolino.
+
+-Scripts for plotting: Correlation, datavisualization, fillgenerator, smoothing
+
+-Data: for running the scripts in this folder -npy files and fill_metadata_2017.csv
+
+
+In the image folder
+
+-Transparency fit for single fills --> FIT
+-Transparency predictions for an entire run, for a single iRing(crystal) --> DNN
+-Transparency predictions for different fills of a single iRing, using various iRings for the training dataset. --> DNN
+-some data visualization and a plot of the network
+
+In the folder Interpretability: omology.py for data-dimensionality reduction (not important)
+
+last updates
+
+-Transparency predictions over different fills using a single DNN for every fill of validationcan be found at the gdoc https://docs.google.com/document/d/1rJgVz8wP1b-NAR73MX_-O5J5WLQosRoqzqC0d5xuioQ/edit?usp=sharing
+
+and here https://docs.google.com/document/d/1F-wr_FwkOcfjzdpn-6x59DQqi07HjKZarvN5OBVwGN0/edit?usp=sharing
+
+some contents on Interpretability at https://docs.google.com/document/d/1zi6BqNBF6W9BESgWMQkyX9AdfUsrZrugtppQeGu0TAo/edit?usp=sharing
+
+Some other regressions on larger datasets will come soon.
+
+
