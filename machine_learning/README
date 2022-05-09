@@ -8,14 +8,16 @@ A list of the scripts in this folder:
 -regression_num.py/ipynb: actual code for DNN regressions for crystals data from iRings 22...28
 -TurnOnCurve version for single fills (the code for the turn on is also inside some regression.py scripts)
 
+#-------------------------------
 Other scripts :
 -EE2DFitting, Fitsinglefill_2D, Tiring/Tiring-save : scripts for fitting single fills in a crystal, starting from the work of Alessandro Brumasolino.
 
 -Scripts for plotting: Correlation, datavisualization, fillgenerator, smoothing
 
 -Data: for running the scripts in this folder -npy files and fill_metadata_2017.csv
-
-
+-npy files reachable at the drive folder: https://drive.google.com/drive/folders/1D8bKa8EISrRjkGVqviWtX94H5oKpxhZ7?usp=sharing
+(To run a script just download npy files from the drive folder and put it in the same folder of the script)
+#--------------------------------
 In the image folder
 
 -Transparency fit for single fills --> FIT
@@ -23,9 +25,11 @@ In the image folder
 -Transparency predictions for different fills of a single iRing, using various iRings for the training dataset. --> DNN
 -some data visualization and a plot of the network
 
+#--------------------------------
 In the folder Interpretability: omology.py for data-dimensionality reduction (not important)
 
-last updates
+#--------------------------------
+Last updates
 
 -Transparency predictions over different fills using a single DNN for every fill of validationcan be found at the gdoc https://docs.google.com/document/d/1rJgVz8wP1b-NAR73MX_-O5J5WLQosRoqzqC0d5xuioQ/edit?usp=sharing
 
