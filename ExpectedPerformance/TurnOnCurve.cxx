@@ -20,7 +20,8 @@ void TurnOnCurve() {
 
     // Load real transparency data, with lumi inst and lumi in fill
 //     in_file.open("iring24.txt");
-    in_file.open("iring26.txt");
+    in_file.open("iring25.txt");
+//     in_file.open("iring26.txt");
     if (!in_file) {
         std::cout << "error" << std::endl;
         exit(1);
