@@ -15,12 +15,14 @@ void merge(){
   TFile* fileMerged = new TFile ("merged.root", "RECREATE");
   TTree* mergedTree = new TTree("mergedTree", "");
   
-  Float_t         energy_EB_all_prompt;
+  Float_t         energy_EB_prompt;
   Float_t         energy_EB_hlt;
   Float_t         energy_EB_model;
-  mergedTree->Branch("energy_EB_all_prompt", &energy_EB_all_prompt, "F");
+  Float_t         energy_EB_model_hlt;
+  mergedTree->Branch("energy_EB_prompt", &energy_EB_prompt, "F");
   mergedTree->Branch("energy_EB_hlt", &energy_EB_hlt, "F");
   mergedTree->Branch("energy_EB_model", &energy_EB_model, "F");
+  mergedTree->Branch("energy_EB_model_hlt", &energy_EB_model_hlt, "F");
   
   
   TFile *_file0 = TFile::Open("dumpPROMPTRECO.root");
@@ -29,17 +31,23 @@ void merge(){
   
   TFile *_file2 = TFile::Open("dumpHLT.root");
   
+  TFile *_file3 = TFile::Open("dumpAVARSI_HLT.root");
+  
+  
   
   TTree* tree0 = (TTree*) _file0->Get("TreeProducerNoise/tree");
 
   TTree* tree1 = (TTree*) _file1->Get("TreeProducerNoise/tree");
 
   TTree* tree2 = (TTree*) _file2->Get("TreeProducerNoise/tree");
+
+  TTree* tree3 = (TTree*) _file3->Get("TreeProducerNoise/tree");
   
   
   tree0->SetBranchAddress("energy_EB", energy_EB);
   tree1->SetBranchAddress("energy_EB", energy_EB);
   tree2->SetBranchAddress("energy_EB", energy_EB);
+  tree3->SetBranchAddress("energy_EB", energy_EB);
   
   
   int nEntries = tree0->GetEntries();
@@ -56,7 +64,7 @@ void merge(){
     for (int ixtal=0; ixtal<61200; ixtal++) {
       if (energy_EB[ixtal] >0.00001) {
 //         std::cout << "   energy_EB[0] = " << energy_EB[0];
-        energy_EB_all_prompt = energy_EB[ixtal];
+        energy_EB_prompt = energy_EB[ixtal];
         
         tree1->GetEntry(iEntry);
 //         std::cout << "   energy_EB[0] = " << energy_EB[0];
@@ -65,6 +73,11 @@ void merge(){
         tree2->GetEntry(iEntry);
 //         std::cout << "   energy_EB[0] = " << energy_EB[0];
         energy_EB_hlt = energy_EB[ixtal];
+
+        tree3->GetEntry(iEntry);
+        //         std::cout << "   energy_EB[0] = " << energy_EB[0];
+        energy_EB_model_hlt = energy_EB[ixtal];
+        
         
 //         std::cout << std::endl;    
         
