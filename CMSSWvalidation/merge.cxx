@@ -12,7 +12,8 @@ void merge(){
   Float_t         energy_EE[14648];
   
 
-  TFile* fileMerged = new TFile ("merged.root", "RECREATE");
+//   TFile* fileMerged = new TFile ("merged.root", "RECREATE");
+  TFile* fileMerged = new TFile ("merged_2.root", "RECREATE");
   TTree* mergedTree = new TTree("mergedTree", "");
   
   Float_t         energy_EB_prompt;
@@ -25,15 +26,26 @@ void merge(){
   mergedTree->Branch("energy_EB_model_hlt", &energy_EB_model_hlt, "F");
   
   
-  TFile *_file0 = TFile::Open("dumpPROMPTRECO.root");
+//   TFile *_file0 = TFile::Open("dumpPROMPTRECO.root");
+// 
+//   TFile *_file1 = TFile::Open("dumpAVARSI.root");
+//   
+//   TFile *_file2 = TFile::Open("dumpHLT.root");
+//   
+//   TFile *_file3 = TFile::Open("dumpAVARSI_HLT.root");
+//   
+  
 
-  TFile *_file1 = TFile::Open("dumpAVARSI.root");
+  TFile *_file0 = TFile::Open("dumpPROMPTRECO_2.root");
   
-  TFile *_file2 = TFile::Open("dumpHLT.root");
+  TFile *_file1 = TFile::Open("dumpAVARSI_2.root");
   
-  TFile *_file3 = TFile::Open("dumpAVARSI_HLT.root");
+  TFile *_file2 = TFile::Open("dumpHLT_2.root");
   
+  TFile *_file3 = TFile::Open("dumpAVARSI_HLT_2.root");
   
+
+
   
   TTree* tree0 = (TTree*) _file0->Get("TreeProducerNoise/tree");
 
