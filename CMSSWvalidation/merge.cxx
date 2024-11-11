@@ -21,6 +21,7 @@ void merge(){
   Float_t         energy_EB_model;
   Float_t         energy_EB_model_hlt;
   mergedTree->Branch("time", &time, "I");
+  mergedTree->Branch("LS", &LS, "I");
   mergedTree->Branch("energy_EB_prompt", &energy_EB_prompt, "F");
   mergedTree->Branch("energy_EB_hlt", &energy_EB_hlt, "F");
   mergedTree->Branch("energy_EB_model", &energy_EB_model, "F");
@@ -61,6 +62,9 @@ void merge(){
   tree1->SetBranchAddress("energy_EB", energy_EB);
   tree2->SetBranchAddress("energy_EB", energy_EB);
   tree3->SetBranchAddress("energy_EB", energy_EB);
+  
+  tree0->SetBranchAddress("LS", &LS);
+  tree0->SetBranchAddress("time", &time);
   
   
   int nEntries = tree0->GetEntries();
