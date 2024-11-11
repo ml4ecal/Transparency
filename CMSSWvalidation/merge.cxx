@@ -20,6 +20,7 @@ void merge(){
   Float_t         energy_EB_hlt;
   Float_t         energy_EB_model;
   Float_t         energy_EB_model_hlt;
+  mergedTree->Branch("time", &time, "I");
   mergedTree->Branch("energy_EB_prompt", &energy_EB_prompt, "F");
   mergedTree->Branch("energy_EB_hlt", &energy_EB_hlt, "F");
   mergedTree->Branch("energy_EB_model", &energy_EB_model, "F");
