@@ -113,10 +113,6 @@ void merge(){
   tree0->SetBranchAddress("eventId", &eventId);
   
 
-  tree3->SetBranchAddress("LS", &LS);
-  tree3->SetBranchAddress("time", &time);
-  tree3->SetBranchAddress("eventId", &eventId);
-  
   int nEntries = tree0->GetEntries();
   
   std::cout << " nEntries = " << nEntries << std::endl;
