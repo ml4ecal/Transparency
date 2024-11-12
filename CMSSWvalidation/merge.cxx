@@ -11,6 +11,16 @@ void merge(){
   Float_t         energy_EB[61200];
   Float_t         energy_EE[14648];
   
+  Float_t         energy_EB_1[61200];
+  Float_t         energy_EE_1[14648];
+  
+  Float_t         energy_EB_2[61200];
+  Float_t         energy_EE_2[14648];
+  
+  Float_t         energy_EB_3[61200];
+  Float_t         energy_EE_3[14648];
+  
+  
 
 //   TFile* fileMerged = new TFile ("merged.root", "RECREATE");
 //   TFile* fileMerged = new TFile ("merged_2.root", "RECREATE");
@@ -88,14 +98,14 @@ void merge(){
   
   
   tree0->SetBranchAddress("energy_EB", energy_EB);
-  tree1->SetBranchAddress("energy_EB", energy_EB);
-  tree2->SetBranchAddress("energy_EB", energy_EB);
-  tree3->SetBranchAddress("energy_EB", energy_EB);
+  tree1->SetBranchAddress("energy_EB", energy_EB_1);
+  tree2->SetBranchAddress("energy_EB", energy_EB_2);
+  tree3->SetBranchAddress("energy_EB", energy_EB_3);
 
   tree0->SetBranchAddress("energy_EE", energy_EE);
-  tree1->SetBranchAddress("energy_EE", energy_EE);
-  tree2->SetBranchAddress("energy_EE", energy_EE);
-  tree3->SetBranchAddress("energy_EE", energy_EE);
+  tree1->SetBranchAddress("energy_EE", energy_EE_1);
+  tree2->SetBranchAddress("energy_EE", energy_EE_2);
+  tree3->SetBranchAddress("energy_EE", energy_EE_3);
 
   
   tree0->SetBranchAddress("LS", &LS);
@@ -124,15 +134,15 @@ void merge(){
 //         std::cout << "   energy_EB_prompt[" << ixtal << "] = " << energy_EB[ixtal];
         
         tree1->GetEntry(iEntry);
-        energy_EB_model = energy_EB[ixtal];
+        energy_EB_model = energy_EB_1[ixtal];
 //         std::cout << "   energy_EB_model[" << ixtal << "] = " << energy_EB[ixtal];
         
         tree2->GetEntry(iEntry);
-        energy_EB_hlt = energy_EB[ixtal];
+        energy_EB_hlt = energy_EB_2[ixtal];
 //         std::cout << "   energy_EB_hlt[" << ixtal << "] = " << energy_EB[ixtal];
         
         tree3->GetEntry(iEntry);
-        energy_EB_model_hlt = energy_EB[ixtal];
+        energy_EB_model_hlt = energy_EB_3[ixtal];
 //         std::cout << "   energy_EB_model_hlt[" << ixtal << "] = " << energy_EB[ixtal];
         
         
@@ -150,15 +160,15 @@ void merge(){
           //         std::cout << "   energy_EE_prompt[" << ixtal << "] = " << energy_EE[ixtal];
           
           tree1->GetEntry(iEntry);
-          energy_EE_model = energy_EE[ixtal];
+          energy_EE_model = energy_EE_1[ixtal];
           //         std::cout << "   energy_EE_model[" << ixtal << "] = " << energy_EE[ixtal];
           
           tree2->GetEntry(iEntry);
-          energy_EE_hlt = energy_EE[ixtal];
+          energy_EE_hlt = energy_EE_2[ixtal];
           //         std::cout << "   energy_EE_hlt[" << ixtal << "] = " << energy_EE[ixtal];
           
           tree3->GetEntry(iEntry);
-          energy_EE_model_hlt = energy_EE[ixtal];
+          energy_EE_model_hlt = energy_EE_3[ixtal];
           //         std::cout << "   energy_EE_model_hlt[" << ixtal << "] = " << energy_EE[ixtal];
           
           
