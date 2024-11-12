@@ -13,10 +13,12 @@ void merge(){
   
 
 //   TFile* fileMerged = new TFile ("merged.root", "RECREATE");
-  TFile* fileMerged = new TFile ("merged_2.root", "RECREATE");
+//   TFile* fileMerged = new TFile ("merged_2.root", "RECREATE");
+  TFile* fileMerged = new TFile ("merged_3.root", "RECREATE");
   TTree* mergedTree = new TTree("mergedTree", "");
 
-  TFile* fileMergedEE = new TFile ("merged_2_EE.root", "RECREATE");
+//   TFile* fileMergedEE = new TFile ("merged_2_EE.root", "RECREATE");
+  TFile* fileMergedEE = new TFile ("merged_3_EE.root", "RECREATE");
   TTree* mergedTreeEE = new TTree("mergedTreeEE", "");
   
   float     energy_EB_prompt;
@@ -55,23 +57,23 @@ void merge(){
 //   
   
 
-  TFile *_file0 = TFile::Open("dumpPROMPTRECO_2.root");
+//   TFile *_file0 = TFile::Open("dumpPROMPTRECO_2.root");
+//   
+//   TFile *_file1 = TFile::Open("dumpAVARSI_2.root");
+//   
+//   TFile *_file2 = TFile::Open("dumpHLT_2.root");
+//   
+//   TFile *_file3 = TFile::Open("dumpAVARSI_HLT_2.root");
   
-  TFile *_file1 = TFile::Open("dumpAVARSI_2.root");
-  
-  TFile *_file2 = TFile::Open("dumpHLT_2.root");
-  
-  TFile *_file3 = TFile::Open("dumpAVARSI_HLT_2.root");
   
   
-  /*
   TFile *_file0 = TFile::Open("dumpPROMPTRECO_3.root");
   
   TFile *_file1 = TFile::Open("dumpAVARSI_3.root");
   
   TFile *_file2 = TFile::Open("dumpHLT_3.root");
   
-  TFile *_file3 = TFile::Open("dumpAVARSI_HLT_3.root");*/
+  TFile *_file3 = TFile::Open("dumpAVARSI_HLT_3.root");
   
   
 

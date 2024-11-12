@@ -17,5 +17,11 @@ code:
     mergedTree->Draw("energy_EB_model_hlt/energy_EB_hlt", "energy_EB_model_hlt/energy_EB_hlt>1")
 
     
+    mergedTreeEE->Draw("energy_EE_model_hlt/energy_EE_hlt")
+    mergedTreeEE->Draw("energy_EE_model_hlt/energy_EE_prompt")
+    mergedTreeEE->Draw("LS")
+    mergedTreeEE->Draw("eventId")
+
+
     
     
