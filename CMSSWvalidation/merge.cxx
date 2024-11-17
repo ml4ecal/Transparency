@@ -24,11 +24,13 @@ void merge(){
 
 //   TFile* fileMerged = new TFile ("merged.root", "RECREATE");
 //   TFile* fileMerged = new TFile ("merged_2.root", "RECREATE");
-  TFile* fileMerged = new TFile ("merged_3.root", "RECREATE");
+//   TFile* fileMerged = new TFile ("merged_3.root", "RECREATE");
+  TFile* fileMerged = new TFile ("merged_4.root", "RECREATE");
   TTree* mergedTree = new TTree("mergedTree", "");
 
 //   TFile* fileMergedEE = new TFile ("merged_2_EE.root", "RECREATE");
-  TFile* fileMergedEE = new TFile ("merged_3_EE.root", "RECREATE");
+//   TFile* fileMergedEE = new TFile ("merged_3_EE.root", "RECREATE");
+  TFile* fileMergedEE = new TFile ("merged_4_EE.root", "RECREATE");
   TTree* mergedTreeEE = new TTree("mergedTreeEE", "");
   
   float     energy_EB_prompt;
@@ -77,16 +79,34 @@ void merge(){
   
   
   
-  TFile *_file0 = TFile::Open("dumpPROMPTRECO_3.root");
+//   TFile *_file0 = TFile::Open("dumpPROMPTRECO_3.root");
+//   
+//   TFile *_file1 = TFile::Open("dumpAVARSI_3.root");
+//   
+//   TFile *_file2 = TFile::Open("dumpHLT_3.root");
+//   
+//   TFile *_file3 = TFile::Open("dumpAVARSI_HLT_3.root");
   
-  TFile *_file1 = TFile::Open("dumpAVARSI_3.root");
   
-  TFile *_file2 = TFile::Open("dumpHLT_3.root");
+//   TFile *_file0 = TFile::Open("data/dumpPROMPTRECO_3.root");
+//   
+//   TFile *_file1 = TFile::Open("data/dumpAVARSI_3.root");
+//   
+//   TFile *_file2 = TFile::Open("data/dumpHLT_3.root");
+//   
+//   TFile *_file3 = TFile::Open("data/dumpAVARSI_HLT_3.root");
   
-  TFile *_file3 = TFile::Open("dumpAVARSI_HLT_3.root");
   
   
+  TFile *_file0 = TFile::Open("data/dumpPROMPTRECO_4.root");
+  
+  TFile *_file1 = TFile::Open("data/dumpAVARSI_4.root");
+  
+  TFile *_file2 = TFile::Open("data/dumpHLT_4.root");
+  
+  TFile *_file3 = TFile::Open("data/dumpAVARSI_HLT_4.root");
 
+  
   
   TTree* tree0 = (TTree*) _file0->Get("TreeProducerNoise/tree");
 
@@ -113,6 +133,10 @@ void merge(){
   tree0->SetBranchAddress("eventId", &eventId);
   
 
+  int minXtalEB = 0;
+  int maxXtalEB = 50;
+//   int maxXtalEB = 61200;
+  
   int nEntries = tree0->GetEntries();
   
   std::cout << " nEntries = " << nEntries << std::endl;
@@ -124,7 +148,7 @@ void merge(){
     
     std::cout << " iEntry = " << iEntry << " : " << nEntries << std::endl;
     
-    for (int ixtal=0; ixtal<61200; ixtal++) {
+    for (int ixtal=minXtalEB; ixtal<maxXtalEB; ixtal++) {
       if (energy_EB[ixtal] >0.00001) {
         energy_EB_prompt = energy_EB[ixtal];
 //         std::cout << "   energy_EB_prompt[" << ixtal << "] = " << energy_EB[ixtal];
